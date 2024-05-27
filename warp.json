@@ -1,0 +1,199 @@
+{
+        "route": {
+                "geoip": {
+                "path": "geo-assets\\sagernet-sing-geoip-geoip.db"
+                },
+                "geosite": {
+                "path": "geo-assets\\sagernet-sing-geosite-geosite.db"
+                },
+                "rules": [
+                {
+                        "inbound": "dns-in",
+                        "outbound": "dns-out"
+                },
+                {
+                        "port": 53,
+                        "outbound": "dns-out"
+                },
+                {                                                               "clash_mode": "Direct",                                 "outbound": "direct"
+                },
+                {                                                               "clash_mode": "Global",
+                        "outbound": "select"                            }                                                       ],
+                "auto_detect_interface": true,
+                "override_android_vpn": true
+        },
+        "outbounds": [
+                {
+                "type": "selector",
+                "tag": "select",
+                "outbounds": [
+                        "auto",
+                        "IP->Iran, Yotube:Geekmeek",
+                        "IP->Main, Yotube:Geekmeek"
+                ],
+                "default": "auto"
+                },
+                {
+                "type": "urltest",
+                "tag": "auto",
+                "outbounds": [
+                        "IP->Iran, Yotube:Geekmeek",
+                        "IP->Main, Yotube:Geekmeek"
+                ],
+                "url": "http://cp.cloudflare.com/",
+                "interval": "10m0s"
+                },
+                {
+                "type": "wireguard",
+                "tag": "IP->Iran, Yotube:Geekmeek",
+                "local_address": [
+                        "172.16.0.2/32",
+                        "2606:4700:110:818b:56d:97c4:e386:1aac/128"
+                ],
+                "private_key": "oOqobbCaYjsyGimnehFhzDbfl8RAahSJO947/SbBIno=",
+                "server": "162.159.192.138",
+                "server_port": 891,
+                "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+                "reserved": [15,195,51],
+                "mtu": 1280,
+                "fake_packets": "5-10"
+                },
+                {
+                "type": "wireguard",
+                "tag": "IP->Main, Yotube:Geekmeek",
+                "detour": "IP->Iran, Yotube:Geekmeek",
+                "local_address": [
+                        "172.16.0.2/32",
+                        "2606:4700:110:8e90:2b2d:d133:5f6d:8c7d/128"
+                ],
+                "private_key": "mECnkZSekFwxTP0PCFv5+9m+Hovkn3jaQXGMRHj5l2A=",
+                "server": "162.159.192.138",
+                "server_port": 891,
+                "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+                "reserved": [186,17,61],
+                "mtu": 1280,
+                "fake_packets": "5-10"
+                },
+                {
+                "type": "dns",
+                "tag": "dns-out"
+                },
+                {
+                "type": "direct",
+                "tag": "direct"
+                },
+                {
+                "type": "direct",
+                "tag": "bypass"
+                },
+                {
+                "type": "block",
+                "tag": "block"
+                }
+        ]
+        }35\ude86\ud835\ude7b \ud83c\uddfc\ud83c\uddeb :)"
+            ],
+            "url": "https:\/\/www.gstatic.com\/generate_204",
+            "interval": "3m",
+            "tolerance": 50
+        },
+        {
+            "tag": "direct",
+            "type": "direct"
+        },
+        {
+            "tag": "bypass",
+            "type": "direct"
+        },
+        {
+            "tag": "block",
+            "type": "block"
+        },
+        {
+            "tag": "dns-out",
+            "type": "dns"
+        },
+        {
+            "type": "wireguard",
+            "server": "188.114.98.224",
+            "server_port": 908,
+            "local_address": [
+                "172.16.0.2\/32",
+                "2606:4700:110:8225:cdad:5912:8162:46bc\/128"
+            ],
+            "private_key": "QPPY5RnG73odigFPahbSvWcZNQ9LYxjxyO9lnQEHtGw=",
+            "peer_public_key": "bmXOC+F1FxEMF9dyiK2H5\/1SUtzH0JuVo51h2wPfgyo=",
+            "mtu": 1280,
+            "reserved": "8SSK",
+            "tag": "-\/ \ud835\ude7c\ud835\ude70\ud835\ude7c\ud835\ude70\ud835\ude86\ud835\ude7b \ud83c\uddfc\ud83c\uddeb :)"
+        }
+    ],
+    "route": {
+        "auto_detect_interface": true,
+        "override_android_vpn": true,
+        "final": "proxy",
+        "geoip": {
+            "download_url": "https:\/\/github.com\/MiSaturo\/sing-box-geoip-ir\/releases\/latest\/download\/geoip.db",
+            "download_detour": "direct"
+        },
+        "geosite": {
+            "download_url": "https:\/\/github.com\/MasterKia\/iran-hosted-domains\/releases\/latest\/download\/iran-geosite.db",
+            "download_detour": "direct"
+        },
+        "rules": [
+            {
+                "outbound": "dns-out",
+                "port": [
+                    53
+                ]
+            },
+            {
+                "inbound": [
+                    "dns-in"
+                ],
+                "outbound": "dns-out"
+            },
+            {
+                "domain_suffix": [
+                    "ir"
+                ],
+                "outbound": "bypass"
+            },
+            {
+                "geoip": [
+                    "ir"
+                ],
+                "outbound": "bypass"
+            },
+            {
+                "geosite": [
+                    "ir"
+                ],
+                "outbound": "direct"
+            },
+            {
+                "geosite": [
+                    "other"
+                ],
+                "outbound": "direct"
+            },
+            {
+                "geosite": [
+                    "ads"
+                ],
+                "outbound": "block"
+            },
+            {
+                "ip_cidr": [
+                    "224.0.0.0\/3",
+                    "ff00::\/8"
+                ],
+                "outbound": "block",
+                "source_ip_cidr": [
+                    "224.0.0.0\/3",
+                    "ff00::\/8"
+                ]
+            }
+        ]
+    }
+}
