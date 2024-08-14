@@ -1,9 +1,11 @@
 #!/bin/bash
 
 # توکن ربات خود را اینجا قرار دهید
-BOT_TOKEN="7032388315:AAFey4M3eiFkKgQtq6oDpESr6BgZoVTBMiE"
+BOT_TOKEN="7040822162:AAGUrdK9YlQozSzGUExITTbFJ60b8LF5eT8"
 # آیدی کانال مقصد را اینجا قرار دهید
 CHAT_ID="@My_SaveMessage"
+# آیدی کانال منبع را اینجا قرار دهید
+SOURCE_CHAT_ID="@ConfigsHUB2"
 
 # تابع ارسال پیام
 send_message() {
@@ -13,13 +15,19 @@ send_message() {
 
 # دریافت پیام‌ها از کانال منبع
 get_messages() {
-    local source_chat_id="@ConfigsHUB2"
     local last_message_id=$(curl -s "https://api.telegram.org/bot$BOT_TOKEN/getUpdates" | jq '.result[-1].message.message_id')
     local new_messages=$(curl -s "https://api.telegram.org/bot$BOT_TOKEN/getUpdates?offset=$((last_message_id + 1))")
 
-    echo $new_messages | jq -c '.result[]? | select(.message.chat.username == "'$source_chat_id'") | .message.text' | while read message; do
+    echo $new_messages | jq -c '.result[]? | select(.message.chat.username == "'$SOURCE_CHAT_ID'") | .message.text' | while read message; do
         send_message "$message"
+        log_result "$message"
     done
+}
+
+# تابع ثبت نتیجه در سرور
+log_result() {
+    local message=$1
+    echo "Message sent: $message" >> /path/to/logfile.log
 }
 
 # اجرای تابع دریافت پیام‌ها
