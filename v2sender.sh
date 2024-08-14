@@ -13,7 +13,7 @@ send_message() {
 
 # دریافت پیام‌ها از کانال منبع
 get_messages() {
-    local source_chat_id="@v2ray_configs_pool"
+    local source_chat_id="@ConfigsHUB2"
     local last_message_id=$(curl -s "https://api.telegram.org/bot$BOT_TOKEN/getUpdates" | jq '.result[-1].message.message_id')
     local new_messages=$(curl -s "https://api.telegram.org/bot$BOT_TOKEN/getUpdates?offset=$((last_message_id + 1))")
 
