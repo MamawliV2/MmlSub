@@ -17,7 +17,8 @@ get_messages() {
     local last_message_id=$(curl -s "https://api.telegram.org/bot$BOT_TOKEN/getUpdates" | jq '.result[-1].message.message_id')
     local new_messages=$(curl -s "https://api.telegram.org/bot$BOT_TOKEN/getUpdates?offset=$((last_message_id + 1))")
 
-    echo $new_messages | jq -c '.result[] | select(.message.chat.username == "'$source_chat_id'") | .message.text' | while read message; do
+    echo $new_messages | jq -c 'try .result[] | select(.message.chat.username == "'$source_chat_id'") | .message.text catch null'
+' | while read message; do
         send_message "$message"
     done
 }
