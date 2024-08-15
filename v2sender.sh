@@ -1,34 +1,55 @@
 #!/bin/bash
 
-# توکن ربات خود را اینجا قرار دهید
-BOT_TOKEN="7040822162:AAGUrdK9YlQozSzGUExITTbFJ60b8LF5eT8"
-# آیدی کانال مقصد را اینجا قرار دهید
-CHAT_ID="@My_SaveMessage"
-# آیدی کانال منبع را اینجا قرار دهید
-SOURCE_CHAT_ID="@ConfigsHUB2"
+# بررسی وجود curl
+if ! command -v curl &> /dev/null; then
+    echo "curl is not installed. Installing..."
+    sudo apt-get update
+    sudo apt-get install -y curl
+fi
 
-# تابع ارسال پیام
+# درخواست توکن از کاربر
+read -p "Enter your Telegram Bot Token: " bot_token
+
+# ایجاد پوشه برای اسکریپت
+mkdir -p ~/telegram_time_script
+cd ~/telegram_time_script
+
+# نوشتن اسکریپت اصلی
+cat << 'EOF' > telegram_time_script.sh
+#!/bin/bash
+
+# تابع برای ارسال پیام به ربات تلگرام
 send_message() {
-    local message=$1
-    curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" -d chat_id=$CHAT_ID -d text="$message"
+    local token="$1"
+    local chat_id="$2"
+    local text="$3"
+    local url_req="https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${text}"
+    curl -s "$url_req" > /dev/null
 }
 
-# دریافت پیام‌ها از کانال منبع
-get_messages() {
-    local last_message_id=$(curl -s "https://api.telegram.org/bot$BOT_TOKEN/getUpdates" | jq '.result[-1].message.message_id')
-    local new_messages=$(curl -s "https://api.telegram.org/bot$BOT_TOKEN/getUpdates?offset=$((last_message_id + 1))")
+# تابع برای دریافت و ارسال زمان و تاریخ
+send_time() {
+    current_datetime=$(TZ="Asia/Tehran" date +'%a %b %e %Y%n%I:%M %p')
+    persian_date=$(date -d "$(TZ="Asia/Tehran" date +'%Y-%m-%d')" +'%Y-%m-%d %H:%M:%S' | awk -F' ' '{print $1}' | tr '-' '/')
 
-    echo $new_messages | jq -c '.result[]? | select(.message.chat.username == "'$SOURCE_CHAT_ID'") | .message.text' | while read message; do
-        send_message "$message"
-        log_result "$message"
-    done
+    # چت آیدی را به صورت خودکار دریافت کنید (مثلاً از یک فایل یا ورودی)
+    chat_id="$YOUR_CHAT_ID"  # اینجا باید چت آیدی واقعی خود را قرار دهید
+    send_message "$bot_token" "$chat_id" "🕰️ ساعت و تاریخ میلادی: ${current_datetime}\n📅 تاریخ شمسی: ${persian_date}"
 }
 
-# تابع ثبت نتیجه در سرور
-log_result() {
-    local message=$1
-    echo "Message sent: $message" >> /path/to/logfile.log
-}
+# گوش دادن به ورودی کاربر
+while true; do
+    read -p "Enter command: " command
+    if [[ "$command" == "/time" ]]; then
+        send_time
+    fi
+done
+EOF
 
-# اجرای تابع دریافت پیام‌ها
-get_messages
+# تغییر مجوز فایل برای اجرایی شدن
+chmod +x telegram_time_script.sh
+
+# اجرای اسکریپت اصلی
+./telegram_time_script.sh "$bot_token"
+
+echo "Installation completed. The script is now running."
