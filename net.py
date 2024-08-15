@@ -1,27 +1,22 @@
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
-import datetime
+from telethon import TelegramClient, events
 
-# توکن ربات خود را اینجا قرار دهید
-TOKEN = '6573552535:AAHp8jHkxAEe11Rk-CPCiw9H3xywQIad7qs'
+# تنظیمات ربات
+api_id = '1416439'  # api_id شما
+api_hash = '9ac5952633a05e37c246a9ce5b93b5b1'  # api_hash شما
+phone_number = '+989944308487'  # شماره تلفن شما
 
-def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('سلام! برای دریافت ساعت آنلاین، دستور /time را وارد کنید.')
+# ایجاد کلاینت تلگرام
+client = TelegramClient('session_name', api_id, api_hash)
 
-def send_time(update: Update, context: CallbackContext) -> None:
-    current_time = datetime.datetime.now().strftime('%H:%M:%S')
-    update.message.reply_text(f'ساعت آنلاین: {current_time}')
+@client.on(events.NewMessage)
+async def handler(event):
+    # چاپ پیام‌های دریافتی
+    print(f"پیام جدید: {event.message.message}")
 
-def main() -> None:
-    updater = Updater(TOKEN)
-    
-    dispatcher = updater.dispatcher
+async def main():
+    await client.start(phone=phone_number)
+    print("ربات شروع به کار کرد")
+    await client.run_until_disconnected()
 
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("time", send_time))
-
-    updater.start_polling()
-    updater.idle()
-
-if __name__ == '__main__':
-    main()
+# اجرای ربات
+client.loop.run_until_complete(main())
