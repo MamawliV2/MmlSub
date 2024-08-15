@@ -10,8 +10,11 @@ client = TelegramClient('session_name', api_id, api_hash)
 
 @client.on(events.NewMessage)
 async def handler(event):
-    # ارسال پیام خودکار به کاربر
-    await event.respond('سلام! بعد از آنلاین شدن پاسخگوی شما خواهم بود.')
+    # بررسی اینکه پیام از یک چت خصوصی است
+    if event.is_private:
+        # ارسال پیام خودکار به کاربر
+        await event.respond('سلام صبور باشید
+        بعد از آنلاین شدن پاسخگو هستم.')
 
 async def main():
     # اتصال به حساب کاربری
