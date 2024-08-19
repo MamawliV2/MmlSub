@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # نصب پیش‌نیازها
-pkg install -y python3 py39-pip chromedriver
 pip install selenium telethon
 
 # دریافت شماره تلفن از کاربر
