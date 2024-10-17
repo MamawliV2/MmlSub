@@ -8,7 +8,7 @@ api_hash = input("لطفاً API Hash خود را وارد کنید: ")
 admin_id = int(input("لطفاً ID عددی ادمین را وارد کنید: "))
 
 # ساخت کلاینت تلگرام
-client = TelegramClient('session_name', api_id, api_hash)
+client = TelegramClient('session_name2', api_id, api_hash)
 
 # پیام پیش فرض
 default_message = "صبور باشید، در اسرع وقت پاسخگو هستم."
