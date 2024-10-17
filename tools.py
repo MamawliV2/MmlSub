@@ -12,7 +12,7 @@ channel_username = input("Please enter the channel username (e.g., @channelusern
 client = TelegramClient('session_name', api_id, api_hash)
 
 # لیست مدیران (ایدی عددی یا username)
-admins = [865122337]  # می‌توانید شناسه یا نام کاربری تلگرام مدیران را اینجا وارد کنید
+admins = [865122337 ,'@MmdOmidian']  # می‌توانید شناسه یا نام کاربری تلگرام مدیران را اینجا وارد کنید
 
 # متغیرهای کنترل
 keep_alive_active = False
